@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   var azure = require('azure');
   var util = require('util');
   var path = require('path');
@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   var crypto = require('crypto');
   var mime = require('mime');
 
-  grunt.registerMultiTask('azure-storage', 'Copy files to azure storage blob', function() {
+  grunt.registerMultiTask('azure-storage', 'Copy files to azure storage blob', function () {
     var options = this.options({
       serviceOptions: [], // custom arguments to azure.createBlobService
       containerName: null, // container name, required
@@ -25,23 +25,23 @@ module.exports = function(grunt) {
 
     // set up async callback
     var that = this;
-    var done = (function() {
+    var done = (function () {
       var async = that.async();
       var count = that.files.length;
 
-      return function() {
+      return function () {
         if (--count === 0) {
           async();
         }
       };
     })();
-    
+
     // TODO clear destination folder
 
 
     // create container and insert files
-    var create = function() {
-      blobService.createContainerIfNotExists(options.containerName, options.containerOptions, function(err) {
+    (function () {
+      blobService.createContainerIfNotExists(options.containerName, options.containerOptions, function (err) {
         if (err) {
           if (err.code === 'ContainerBeingDeleted') {
             grunt.fatal("Container being deleted, retrying in 10 seconds");
@@ -50,14 +50,14 @@ module.exports = function(grunt) {
         }
 
         // loop files
-        that.files.forEach(function(f) {
-          grunt.util.async.forEachSeries(f.src, function(source, next) {
+        that.files.forEach(function (f) {
+          grunt.util.async.forEachSeries(f.src, function (source, next) {
             var destination = options.destinationFolderPath + source;
             grunt.log.writeln("copying file %s", destination);
 
             // copy file
-            var copy = function() {
-              blobService.createBlockBlobFromFile(options.containerName, destination, source, {}, function(err) {
+            var copy = function () {
+              blobService.createBlockBlobFromFile(options.containerName, destination, source, {}, function (err) {
                 if (err) {
                   grunt.warn(err);
                 }
@@ -72,6 +72,6 @@ module.exports = function(grunt) {
           }, done);
         });
       });
-    };
+    })();
   });
 };
