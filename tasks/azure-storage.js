@@ -35,6 +35,8 @@ module.exports = function(grunt) {
         }
       };
     })();
+    
+    // TODO clear destination folder
 
 
     // create container and insert files
