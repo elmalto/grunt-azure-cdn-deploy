@@ -13,7 +13,8 @@ Custom connection arguments can be set in service.
 {
   serviceOptions: [], // custom arguments to azure.createBlobService
   containerName: null, // container name, required
-  destinationFolderPath: '' // path to put the files to. Default is root directory of container 
+  destinationFolderPath: '', // path to put the files to. Default is root directory of container 
+  numberOfFoldersToStripFromSourcePath: 0 // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN 
 };
 ```
 
@@ -24,6 +25,8 @@ grunt.initConfig({
     options: {
       containerName: 'assets',
       destinationFolderPath: 'yahoo/app'
+      serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], 
+      numberOfFoldersToStripFromSourcePath: 1 // remove 'build' folder name from the CDN path 
     },
     files: 'build/**/*.{html,js,css}'
   }
