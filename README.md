@@ -1,9 +1,6 @@
-# grunt-azure-storage
+# grunt-azure-cdn-deploy
 
-Grunt task for copying files to an azure storage blob.
-
-This fork is more specific than original. 
-The use case is to deploy a web site to Azure Blob storage.
+Grunt task for copying a directory to azure CDN storage.
 
 Azure SDK uses by default the environment variables AZURE_STORAGE_ACCOUNT and AZURE_STORAGE_ACCESS_KEY.
 Custom connection arguments can be set in service.
