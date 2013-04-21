@@ -5,7 +5,7 @@ module.exports = function (grunt) {
   var util = require('util');
   var path = require('path');
 
-  grunt.registerMultiTask('azure-storage', 'Copy files to azure storage blob', function () {
+  grunt.registerMultiTask('azure-cdn-deploy', 'Copy files to azure storage blob', function () {
     var options = this.options({
       serviceOptions : [], // custom arguments to azure.createBlobService
       containerName : null, // container name, required
