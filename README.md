@@ -10,22 +10,41 @@ Custom connection arguments can be set in service.
 {
   serviceOptions: [], // custom arguments to azure.createBlobService
   containerName: null, // container name, required
-  destinationFolderPath: '', // path to put the files to. Default is root directory of container 
-  numberOfFoldersToStripFromSourcePath: 0 // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN 
+  containerOptions: {publicAccessLevel: "blob"}, // container options
+  destinationFolderPath: '', // path to put the files to. Default is root directory of container
+  concurrentUploadThreads : 10, // number of concurrent uploads, choose best for your network condition
+  numberOfFoldersToStripFromSourcePath: 0, // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN
+  printUrlToFile: '' // pass any of the files that will be uploaded and after upload the plugin will output the URL to console
 };
 ```
 
 ## Gruntfile example
 ```javascript
 grunt.initConfig({
-  'azure-storage': {
-    options: {
-      containerName: 'assets',
-      destinationFolderPath: 'yahoo/app'
-      serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], 
-      numberOfFoldersToStripFromSourcePath: 1 // remove 'build' folder name from the CDN path 
+
+  'azure-cdn-deploy': {
+    app: {
+      options: {
+          containerName: 'latest-web',
+          serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], 
+          numberOfFoldersToStripFromSourcePath: 2,
+          destinationFolderPath: 'dev/app'
+      },
+      src: [
+          'build/app/**/*.{html,js,png,css,ico}'
+      ]
     },
-    files: 'build/**/*.{html,js,css}'
+    deps: {
+      options: {
+          containerName: 'latest-web',
+          serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], 
+          numberOfFoldersToStripFromSourcePath: 2,
+          destinationFolderPath: 'dev/components'
+      },
+      src: [
+          'build/components/**/*.{html,js,png,css}'
+      ]
+    }
   }
 });
 ```

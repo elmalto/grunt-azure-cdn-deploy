@@ -1,22 +1,19 @@
 {
   "name": "grunt-azure-cdn-deploy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Deploy a directory to Azure CDN blob storage",
   "author": "Konstantin Raev",
   "license": "MIT",
-  "main": "Gruntfile.js",
   "homepage": "https://github.com/bestander/grunt-azure-cdn-deploy",
   "repository": {
     "type": "git",
     "url": "https://github.com/bestander/grunt-azure-cdn-deploy.git"
   },
   "dependencies": {
-    "azure": "~0.7",
-    "mime": "~1.2.9"
+    "azure": "~0.7"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.3.0",
-    "grunt-contrib-nodeunit": "~0.1.2"
+    "grunt": "~0.4.1"
   }
+
 }
