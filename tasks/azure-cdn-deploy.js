@@ -87,9 +87,11 @@ module.exports = function (grunt) {
                 if(source === options.printUrlToFile){
                   blobService.listBlobs(options.containerName, {prefix : destination}, function (err, blobs) {
                     grunt.log.ok("Uploaded to", blobs[0].url);
+                    next();
                   });
+                } else {
+                  next();
                 }
-                next();
               });
             };
             upload();
