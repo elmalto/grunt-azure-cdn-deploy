@@ -14,7 +14,9 @@ Custom connection arguments can be set in service.
   destinationFolderPath: '', // path to put the files to. Default is root directory of container
   concurrentUploadThreads : 10, // number of concurrent uploads, choose best for your network condition
   numberOfFoldersToStripFromSourcePath: 0, // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN
-  printUrlToFile: '' // pass any of the files that will be uploaded and after upload the plugin will output the URL to console
+  printUrlToFile: '', // pass any of the files that will be uploaded and after upload the plugin will output the URL to console
+  gzip: false, // true if want to gzip the files before uploading
+  metadata: {cacheControl: 'public, max-age=31556926'} // metadata for each uploaded file
 };
 ```
 
@@ -48,3 +50,5 @@ grunt.initConfig({
   }
 });
 ```
+
+Thanks to https://github.com/jstott/grunt-azureblob and https://github.com/litek/grunt-azure-storage for inspiration.
