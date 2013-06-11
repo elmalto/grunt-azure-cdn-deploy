@@ -5,7 +5,6 @@ module.exports = function (grunt) {
     var util = require('util');
     var path = require('path');
     var Q = require('q');
-    var tmp = require('tmp');
     var zlib = require('zlib');
     var mime = require('mime');
     var fs = require('fs');
