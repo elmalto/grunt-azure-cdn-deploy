@@ -1,6 +1,6 @@
 {
     "name": "grunt-azure-cdn-deploy",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Deploy a directory to Azure CDN blob storage",
     "author": {
         "name": "Konstantin Raev"

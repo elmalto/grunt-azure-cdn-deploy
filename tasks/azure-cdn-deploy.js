@@ -126,14 +126,15 @@ module.exports = function (grunt) {
         }
 
         function compressFileToBlobStorage(containerName, destFileName, sourceFile, metadata) {
-            return gzipFile(sourceFile)
-                .then(function(tmpFile) {
-                    chooseSmallerFileAndModifyContentType(tmpFile, sourceFile, metadata)
-                        .then(function (fileAndMeta) {
-                            return copyFileToBlobStorage(containerName, destFileName, fileAndMeta.file, fileAndMeta.meta)
-                        })
+            return gzipFile(sourceFile, sourceFile, metadata)
+                .then(function (tmpFile) {
+                    return chooseSmallerFileAndModifyContentType(tmpFile, sourceFile, metadata);
+                })
+                .then(function (res) {
+                    grunt.log.debug("Based on file size decided to upload %s with contentEncoding %s", res.fileToUpload, res.updatedMetadata.contentEncoding);
+                    return copyFileToBlobStorage(containerName, destFileName, res.fileToUpload, res.updatedMetadata)
                         .finally(function(){
-                            fs.unlinkSync(tmpFile);
+                            fs.unlinkSync(res.zippedTmpFile);
                         });
                 });
         }
@@ -153,10 +154,33 @@ module.exports = function (grunt) {
       
         function chooseSmallerFileAndModifyContentType(compressedFile, originalFile, metadata) {
             var deferred = Q.defer();
-            meta.contentEncoding =  'gzip';
-            deferred.resolve({
-                meta: meta,
-                file: compressedFile
+            fs.stat(compressedFile, function (err, compressedStats) {
+                if(err){
+                    deferred.reject(err);
+                    return;
+                }
+                fs.stat(originalFile, function (err, originalStats) {
+                    if(err){
+                        deferred.reject(err);
+                        return;
+                    }
+                    if(originalStats.size < compressedStats.size){
+                        // don't upload compressed if it becomes bigger 
+                        deferred.resolve({
+                            zippedTmpFile: compressedFile,
+                            fileToUpload: originalFile,
+                            updatedMetadata: metadata
+                        });
+                    } else {
+                        metadata.contentEncoding =  'gzip';
+                        deferred.resolve({
+                            zippedTmpFile: compressedFile,
+                            fileToUpload: compressedFile,
+                            updatedMetadata: metadata
+                        });
+                    }
+                });
+
             });
             return deferred.promise;
         }
