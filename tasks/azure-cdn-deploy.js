@@ -97,7 +97,6 @@ module.exports = function (grunt) {
                     grunt.log.debug("Uploading file %s", source);
                     meta = clone(options.metadata);
                     meta.contentType = mime.lookup(source);
-                    meta.contentEncoding =  options.gzip ? 'gzip': null;
                     fnCopyToBlob = options.gzip ? compressFileToBlobStorage : copyFileToBlobStorage;
                     fnCopyToBlob(options.containerName, destination, source, meta).
                         then(function () {
@@ -129,7 +128,10 @@ module.exports = function (grunt) {
         function compressFileToBlobStorage(containerName, destFileName, sourceFile, metadata) {
             return gzipFile(sourceFile)
                 .then(function(tmpFile) {
-                    return copyFileToBlobStorage(containerName, destFileName, tmpFile, metadata)
+                    chooseSmallerFileAndModifyContentType(tmpFile, sourceFile, metadata)
+                        .then(function (fileAndMeta) {
+                            return copyFileToBlobStorage(containerName, destFileName, fileAndMeta.file, fileAndMeta.meta)
+                        })
                         .finally(function(){
                             fs.unlinkSync(tmpFile);
                         });
@@ -145,6 +147,16 @@ module.exports = function (grunt) {
                 } else {
                     deferred.resolve();
                 }
+            });
+            return deferred.promise;
+        }
+      
+        function chooseSmallerFileAndModifyContentType(compressedFile, originalFile, metadata) {
+            var deferred = Q.defer();
+            meta.contentEncoding =  'gzip';
+            deferred.resolve({
+                meta: meta,
+                file: compressedFile
             });
             return deferred.promise;
         }
