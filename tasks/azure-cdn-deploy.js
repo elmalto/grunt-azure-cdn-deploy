@@ -15,6 +15,7 @@ module.exports = function (grunt) {
             containerName: null, // container name, required
             containerOptions: {publicAccessLevel: "blob"}, // container options
             destinationFolderPath: '', // path within container
+            noDeleteExistingBlobs: false, // set it to true to skip deleting blobs in the folder you upload and all the subfolders
             concurrentUploadThreads: 10, // number of concurrent uploads, choose best for your network condition
             numberOfFoldersToStripFromSourcePath: 0, // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN
             printUrlToFile: '', // pass any of the files that will be uploaded and after upload the plugin will output the URL to console
@@ -56,28 +57,33 @@ module.exports = function (grunt) {
 
         function deleteAllExistingBlobs() {
             var deferred = Q.defer();
-            // removing all blobs in destination structure
-            blobService.listBlobs(options.containerName, {prefix: options.destinationFolderPath}, function (err, blobs) {
-                if (err) {
-                    grunt.log.debug(err);
-                    deferred.reject("Container being deleted, retrying in 10 seconds");
-                }
-                grunt.util.async.forEach(blobs, function (blob, next) {
-                    grunt.log.debug("deleting file %s", blob.name);
-                    blobService.deleteBlob(options.containerName, blob.name, function (err, success) {
-                        if (err) {
-                            grunt.log.debug("Error while deleting blob %s: %s", blob.name);
-                            deferred.reject(err);
-                        }
-                        grunt.log.debug("deleted %s", blob.url);
-                        next();
-                    });
-                }, function () {
-                    grunt.log.debug("done deleting blobs");
-                    deferred.resolve();
-                })
-
-            });
+            if(options.noDeleteExistingBlobs){
+                grunt.log.debug("skip deleting blobs");
+                deferred.resolve();                
+            } else {
+                // removing all blobs in destination structure
+                blobService.listBlobs(options.containerName, {prefix: options.destinationFolderPath}, function (err, blobs) {
+                    if (err) {
+                        grunt.log.debug(err);
+                        deferred.reject("Container being deleted, retrying in 10 seconds");
+                    }
+                    grunt.util.async.forEach(blobs, function (blob, next) {
+                        grunt.log.debug("deleting file %s", blob.name);
+                        blobService.deleteBlob(options.containerName, blob.name, function (err, success) {
+                            if (err) {
+                                grunt.log.debug("Error while deleting blob %s: %s", blob.name);
+                                deferred.reject(err);
+                            }
+                            grunt.log.debug("deleted %s", blob.url);
+                            next();
+                        });
+                    }, function () {
+                        grunt.log.debug("done deleting blobs");
+                        deferred.resolve();
+                    })
+    
+                });
+            }
             return deferred.promise;
         }
 
