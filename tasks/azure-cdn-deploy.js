@@ -194,7 +194,9 @@ module.exports = function (grunt) {
         function gzipFile(source){
             var tempFile;
             var deferred = Q.defer(),
-                gzip = zlib.createGzip(),
+                gzip = zlib.createGzip({
+                    level: 9 // maximum compression
+                }),
                 inp,
                 out;
 
