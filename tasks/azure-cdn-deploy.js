@@ -96,11 +96,11 @@ module.exports = function (grunt) {
                     var meta, fnCopyToBlob;
                     var destination = source;
                     if (options.numberOfFoldersToStripFromSourcePath) {
-                        destination = path.join.apply(path, source.split(path.sep).slice(options.numberOfFoldersToStripFromSourcePath));
+                        destination = path.join.apply(path, source.split('/').slice(options.numberOfFoldersToStripFromSourcePath));
                     }
                     destination = options.destinationFolderPath + destination;
                     // upload file
-                    grunt.log.debug("Uploading file %s", source);
+                    grunt.log.debug("Uploading file %s", destination);
                     meta = clone(options.metadata);
                     meta.contentType = mime.lookup(source);
                     fnCopyToBlob = options.gzip ? compressFileToBlobStorage : copyFileToBlobStorage;
