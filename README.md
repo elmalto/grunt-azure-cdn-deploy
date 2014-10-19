@@ -54,6 +54,14 @@ npm install grunt-deploy-azure-cdn
 
 ```
 
+### Debugging
+
+run
+```
+grunt azure-cdn-deploy --debug
+```
+To see the log of deleted and uploaded files
+
 ### Parameters
 - `deployOptions` - azure cdn and upload configs
   - `serviceOptions`: [] - custom arguments to azure.createBlobService, or you can use Azure SDK environment variables AZURE_STORAGE_ACCOUNT and AZURE_STORAGE_ACCESS_KEY

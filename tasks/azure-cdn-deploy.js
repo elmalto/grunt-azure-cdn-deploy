@@ -17,7 +17,7 @@ module.exports = function (grunt) {
             }));
         });
         var globalAsync = this.async();
-        deploy(this.options(), files, console.log, function (err) {
+        deploy(this.options(), files, grunt.log.debug, function (err) {
             if(err){
                 grunt.log.error("Error while copying to azure " + err);
                 globalAsync(false);
