@@ -1,6 +1,6 @@
 {
     "name": "grunt-azure-cdn-deploy",
-    "version": "0.1.2",
+    "version": "1.0.0",
     "description": "Deploy a directory to Azure CDN blob storage",
     "author": {
         "name": "Konstantin Raev"
@@ -12,15 +12,6 @@
         "url": "https://github.com/bestander/grunt-azure-cdn-deploy.git"
     },
     "dependencies": {
-        "azure": "~0.7",
-        "q": ">=0.9.3",
-        "mime": "~1.2.9"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.1"
-    },
-    "readme": "# grunt-azure-cdn-deploy\n\nGrunt task for copying a directory to azure CDN storage.\n\nAzure SDK uses by default the environment variables AZURE_STORAGE_ACCOUNT and AZURE_STORAGE_ACCESS_KEY.\nCustom connection arguments can be set in service.\n\n## Options and default values\n```javascript\n{\n  serviceOptions: [], // custom arguments to azure.createBlobService\n  containerName: null, // container name, required\n  containerOptions: {publicAccessLevel: \"blob\"}, // container options\n  destinationFolderPath: '', // path to put the files to. Default is root directory of container\n  concurrentUploadThreads : 10, // number of concurrent uploads, choose best for your network condition\n  numberOfFoldersToStripFromSourcePath: 0, // because files are passed to the task with path relative to GruntFile we may not want to have the full path in CDN\n  printUrlToFile: '' // pass any of the files that will be uploaded and after upload the plugin will output the URL to console\n};\n```\n\n## Gruntfile example\n```javascript\ngrunt.initConfig({\n\n  'azure-cdn-deploy': {\n    app: {\n      options: {\n          containerName: 'latest-web',\n          serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], \n          numberOfFoldersToStripFromSourcePath: 2,\n          destinationFolderPath: 'dev/app'\n      },\n      src: [\n          'build/app/**/*.{html,js,png,css,ico}'\n      ]\n    },\n    deps: {\n      options: {\n          containerName: 'latest-web',\n          serviceOptions : ['my-azure-cdn', 'UcQ1G6ETECDaXLV2C...my azure cdn key .../p0tZmzbjw=='], \n          numberOfFoldersToStripFromSourcePath: 2,\n          destinationFolderPath: 'dev/components'\n      },\n      src: [\n          'build/components/**/*.{html,js,png,css}'\n      ]\n    }\n  }\n});\n```\n",
-    "readmeFilename": "README.md",
-    "_id": "grunt-azure-cdn-deploy@0.0.4",
-    "_from": "grunt-azure-cdn-deploy@~0.0.3"
+        "deploy-azure-cdn": "git://github.com/bestander/deploy-azure-cdn"
+    }
 }
