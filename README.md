@@ -24,29 +24,33 @@ npm install grunt-deploy-azure-cdn
 ### Deploying a set of files to a path in blob storage
 
 ```javascript
-grunt.initConfig({
 
-  'azure-cdn-deploy': {
-    app: {
-      options: {
-        containerName: 'test', // container name in blob
-        serviceOptions: ['blobstoragename', '/OwQ/MyLongSecretStringFromAzureConfigPanel'], // custom arguments to azure.createBlobService
-        folder: '1.2.35-b27', // path within container
-        zip: true, // gzip files if they become smaller after zipping, content-encoding header will change if file is zipped
-        deleteExistingBlobs: true, // true means recursively deleting anything under folder
-        concurrentUploadThreads: 10, // number of concurrent uploads, choose best for your network condition
-        metadata: {
+ grunt.loadNpmTasks('grunt-azure-cdn-deploy');
+  grunt.initConfig({
+    'azure-cdn-deploy': {
+      app: {
+        options: {
+          containerName: 'test', // container name in blob
+          serviceOptions: ['blobstoragename', '/OwQ/MyLongSecretStringFromAzureConfigPanel'], // custom arguments to azure.createBlobService
+          folder: '1.2.35-b27', // path within container
+          zip: true, // gzip files if they become smaller after zipping, content-encoding header will change if file is zipped
+          deleteExistingBlobs: true, // true means recursively deleting anything under folder
+          concurrentUploadThreads: 10, // number of concurrent uploads, choose best for your network condition
+          metadata: {
             cacheControl: 'public, max-age=31530000', // cache in browser
             cacheControlHeader: 'public, max-age=31530000' // cache in azure CDN. As this data does not change, we set it to 1 year
+          },
+          testRun: false // test run - means no blobs will be actually deleted or uploaded, see log messages for details
         },
-        testRun: false // test run - means no blobs will be actually deleted or uploaded, see log messages for details
-      },
-      src: [
-          'build/app/**/*.{html,js,png,css,ico}'
-      ]
+        src: [
+          'src/*.{js,json}',
+          '*.md',
+          '.gitignore'
+        ],
+        cwd: './node_modules/deploy-azure-cdn'
+      }
     }
-  }
-});
+  });
 
 ```
 
