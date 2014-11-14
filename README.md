@@ -15,7 +15,7 @@ It is perfect for deploying compiled assets to Microsoft Azure CDN as a last ste
 ## Installing
 
 ```
-npm install grunt-deploy-azure-cdn
+npm install grunt-azure-cdn-deploy
 ```
 
 
