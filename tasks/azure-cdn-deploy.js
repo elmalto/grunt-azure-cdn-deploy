@@ -2,6 +2,7 @@
 
 var deploy = require('deploy-azure-cdn');
 var path = require('path');
+var fs = require('fs');
 
 module.exports = function (grunt) {
 
@@ -9,11 +10,13 @@ module.exports = function (grunt) {
         var files = [];
         this.files.forEach(function(file) {
             var cwd = file.cwd;
-            files = files.concat(file.src.map(function(src) {
+            files = files.concat(file.src.filter(function(src){
+                return !fs.lstatSync(path.resolve(cwd, src)).isDirectory();
+            }).map(function(src) {
                 return {
                     path: path.resolve(cwd, src),
                     cwd: cwd
-                }
+                };
             }));
         });
         var globalAsync = this.async();
